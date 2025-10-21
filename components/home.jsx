@@ -153,8 +153,8 @@ export default function HomePage() {
               </h1>
 
               {/* Hero Paragraph (Wrapped content in AnimatedText, kept P styling) */}
-              <p className="mx-auto max-w-3xl text-lg text-slate-600 md:text-xl">
-                <AnimatedText delay={0.5} speed={0.01} className="inline-block">
+              <p className="mx-auto max-w-3xl text-lg text-slate-600">
+                <AnimatedText delay={0.5} speed={0.01}>
                   We provide AI-powered financial, consulting and business transformation
                   services to help small and medium enterprises scale
                 </AnimatedText>
