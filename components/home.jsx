@@ -1,10 +1,12 @@
+'use client'
 import Link from "next/link";
 import Navbar from "./navbar";
 import { Faqs } from "./faqs";
+import { motion, useInView } from "framer-motion"; 
+import { useRef } from "react";
+import AnimatedText from "./ui/animatedtext";
 import StarAnimationText from "./ui/starAnimationText";
 import { Roboto } from "next/font/google";
-import {Card, CardContent, CardHeader, CardTitle} from "./ui/card";
-import Image from "next/image";
 import { Handshake, Book, ChartColumnBig, Compass, CircleDollarSign, ShieldCheck, ChartPie, Lightbulb } from "lucide-react";
 
 const roboto = Roboto({
@@ -65,6 +67,9 @@ export default function HomePage() {
     },
   ];
 
+  const servicesRef = useRef(null);
+  const isInView = useInView(servicesRef, { once: true, amount: 0.5 });
+
   return (
     <div className="min-h-screen bg-white text-purple-950">
       <style>{`
@@ -111,11 +116,9 @@ export default function HomePage() {
         <div className="mx-auto flex min-h-screen max-w-7xl flex-col border-x border-dashed border-gray-300 bg-white">
           <Navbar />
 
-
-          {/* Main content */}
           <main>
             <div className="bg-white relative">
-            {/* Dual Gradient Overlay Background */}
+            {/* Dual Gradient Overlay Background (Restored) */}
             <div
               className="absolute inset-0 z-0 opacity-90"
               style={{
@@ -128,16 +131,36 @@ export default function HomePage() {
                 backgroundSize: "48px 48px, 48px 48px, 100% 100%, 100% 100%",
               }}
             />
-            {/* Hero Section */}
+            {/* Hero Section (Original padding and size restored) */}
             <section className="relative z-10 border-b border-dashed border-gray-300 px-6 py-24 text-center">
+              
+              {/* Hero Heading (Wrapped content in AnimatedText, kept H1 styling) */}
               <h1 className="mb-4 text-4xl font-bold text-slate-900 md:text-5xl font-merriweather">
-                Your Trusted Partner in <span className="text-emerald-600">Growth</span>
+                {/* Part 1: Letter-by-letter animation */}
+                <AnimatedText delay={0} className="inline-block">
+                  Your Trusted Partner in
+                </AnimatedText> 
+                
+                {/* Part 2: Whole word animation for colored span */}
+                <motion.span 
+                  className="text-emerald-600 inline-block" // Use inline-block for motion
+                  initial={{ x: -20, opacity: 0, filter: "blur(5px)" }}
+                  animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+                  transition={{ delay: 0.7, type: "spring", damping: 12, stiffness: 100 }}
+                >
+                  &nbsp;Growth
+                </motion.span>
               </h1>
+
+              {/* Hero Paragraph (Wrapped content in AnimatedText, kept P styling) */}
               <p className="mx-auto max-w-3xl text-lg text-slate-600 md:text-xl">
-                We provide AI-powered financial, consulting and business transformation
-                services to help small and medium enterprises scale
+                <AnimatedText delay={0.5} speed={0.01} className="inline-block">
+                  We provide AI-powered financial, consulting and business transformation
+                  services to help small and medium enterprises scale
+                </AnimatedText>
               </p>
 
+              {/* Button (Now visible again) */}
               <button data-slot="button" className="mt-8 cursor-pointer select-none inline-flex items-center duration-200 justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-purple-950 text-primary-foreground hover:bg-purple-900 button-highlighted-shadow h-8 px-4 py-2 has-[&>svg]:px-2.5">
                 <span><Link href="/contact">Reach out to us</Link></span>
                 <svg height="18" width="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" className="-rotate-45">
@@ -154,11 +177,23 @@ export default function HomePage() {
             <section className={`border-b border-dashed border-gray-300 bg-white ${roboto.className}`}>
               {/* "Our Services" Header */}
               <div className="px-6 pt-12 pb-12">
-                <div className="flex items-center text-center">
+                <div className="flex items-center text-center" ref={servicesRef}> 
                   <div className="flex-grow border-t border-dashed border-gray-300"></div>
-                  <h2 className=" text-slate-900 mx-4 flex-shrink-0 rounded-full border border-gray-300 px-6 py-2 text-xl font-semibold font-mono">
-                    Our AI-Enhanced Services Include
-                  </h2>
+                  
+                  <motion.h2
+                    // Original styles applied here
+                    className=" text-slate-900 mx-4 flex-shrink-0 rounded-full border border-gray-300 px-6 py-2 text-xl font-semibold font-mono"
+                    // Animation is now applied only to the AnimatedText inside
+                  >
+                    {isInView ? (
+                        <AnimatedText delay={1} className="inline-block">
+                            Our AI-Enhanced Services Include
+                        </AnimatedText>
+                    ) : (
+                        <span className="opacity-0">Our AI-Enhanced Services Include</span>
+                    )}
+                  </motion.h2>
+
                   <div className="flex-grow border-t border-dashed border-gray-300"></div>
                 </div>
               </div>
@@ -181,14 +216,12 @@ export default function HomePage() {
 
             <section className="border-b border-dashed border-gray-300 bg-white">
               <div className="min-h-[300px] w-full relative text-center">
-              {/* Radial Gradient Background from Top */}
               <div
                 className="absolute inset-0 z-0"
                 style={{
                   background: "radial-gradient(125% 125% at 50% 10%, #fff 40%, #7c3aed 100%)",
                 }}
               />
-              {/* Your Content/Components */}
                 <h4 className="relative top-4 z-10 font-bold font-mono text-purple-950 border-b border-dashed border-gray-300 pb-4">However we are not limited to just this,</h4>
                 <StarAnimationText
                   preText="We provide"
@@ -198,10 +231,10 @@ export default function HomePage() {
             </div>
             </section>
           
-          <section className="border-b border-dashed border-gray-300 bg-white">
-            <h1 className="font-mono font-bold text-slate-900 py-4 text-center">Frequently Asked Questions</h1>
-            <Faqs />
-          </section>
+            <section className="border-b border-dashed border-gray-300 bg-white">
+              <h1 className="font-mono font-bold text-slate-900 py-4 text-center">Frequently Asked Questions</h1>
+              <Faqs />
+            </section>
           </main>
 
           {/* Footer */}
