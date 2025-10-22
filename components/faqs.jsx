@@ -50,10 +50,6 @@ export function Faqs() {
             <li>Process Automation</li>
             <li>Data Mining</li>
           </ul>
-          <p className={`${poppins.className} px-6`}>
-            However that being said, we understand that AI is not perfect. At every level we have
-            manual verification to ensure that we maintain the quality of our services.
-          </p>
         </AccordionContent>
       </AccordionItem>
     </Accordion>

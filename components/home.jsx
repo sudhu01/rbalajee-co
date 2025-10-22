@@ -77,48 +77,58 @@ export default function HomePage() {
         .font-merriweather {
           font-family: 'Merriweather', serif;
         }
+        /* Mobile-first approach: service items have only bottom border by default (col-1) */
         .service-item {
           border-bottom: 1px dashed #d1d5db;
-          border-left: 1px dashed #d1d5db;
+          border-left: none; /* Ensure no left border on mobile */
         }
-        .service-item:nth-child(4n+1) {
-          border-left: none;
-        }
-        @media (max-width: 1023px) and (min-width: 768px) {
-          .service-item:nth-child(2n+1) {
-            border-left: none;
-          }
-          .service-item:nth-child(4n+1) {
-            border-left: 1px dashed #d1d5db;
-          }
-        }
+        
+        /* Cleanup for a single column on small screens */
         @media (max-width: 767px) {
-          .service-item {
-            border-left: none;
-          }
           .service-item:last-child {
-            border-bottom: none;
+            border-bottom: none; /* Last item doesn't need a bottom border */
           }
         }
+        
+        /* Tablet view (md:grid-cols-2) border logic */
         @media (min-width: 768px) {
           .service-item {
+            border-bottom: 1px dashed #d1d5db; /* Re-add bottom border for all for consistency */
+            border-left: 1px dashed #d1d5db; /* Left border starts for grid-cols-2/4 */
+          }
+          /* Remove border for items in the first column (1st, 3rd, 5th, etc.) */
+          .service-item:nth-child(2n+1) { 
+            border-left: none;
+          }
+          /* Remove bottom border for the last row in a 2-column layout. */
+          /* Assuming 8 items: 7th and 8th item (2n+7, 2n+8) */
+          .service-item:nth-last-child(-n+2) {
             border-bottom: none;
           }
         }
-        
-        /* New CSS for Diagonal Lines */
-        
+
+        /* Desktop view (lg:grid-cols-4) border logic */
+        @media (min-width: 1024px) {
+          .service-item {
+            border-bottom: none; /* Remove all bottom borders for the 4-column layout */
+          }
+          /* Re-add left border for items that are not the first in their row (2nd, 3rd, 4th, 6th, etc.) */
+          .service-item:nth-child(2n+1) {
+            border-left: 1px dashed #d1d5db; /* Re-add left border for odd items in 4-column */
+          }
+          /* Remove left border for items in the first column (1st, 5th, 9th, etc.) */
+          .service-item:nth-child(4n+1) {
+            border-left: none;
+          }
+        }
       `}</style>
-      {/* Applying the new 'diagonal-bg' class to the main container 
-        to fill the background outside the max-width content area.
-      */}
+      
       <div className="min-h-screen bg-white text-purple-950 diagonal-bg"> 
         <div className="mx-auto flex min-h-screen max-w-7xl flex-col border-x border-dashed border-gray-300 bg-white">
           <Navbar />
 
           <main>
             <div className="bg-white relative">
-            {/* Dual Gradient Overlay Background (Restored) */}
             <div
               className="absolute inset-0 z-0 opacity-90"
               style={{
@@ -131,19 +141,15 @@ export default function HomePage() {
                 backgroundSize: "48px 48px, 48px 48px, 100% 100%, 100% 100%",
               }}
             />
-            {/* Hero Section (Original padding and size restored) */}
-            <section className="relative z-10 border-b border-dashed border-gray-300 px-6 py-24 text-center">
+            <section className="relative z-10 border-b border-dashed border-gray-300 px-4 py-16 text-center sm:px-6 sm:py-24">
               
-              {/* Hero Heading (Wrapped content in AnimatedText, kept H1 styling) */}
-              <h1 className="mb-4 text-4xl font-bold text-slate-900 md:text-5xl font-merriweather">
-                {/* Part 1: Letter-by-letter animation */}
+              <h1 className="mb-4 text-3xl font-bold text-slate-900 sm:text-4xl md:text-5xl font-merriweather">
                 <AnimatedText delay={0} className="inline-block">
                   Your Trusted Partner in
                 </AnimatedText> 
                 
-                {/* Part 2: Whole word animation for colored span */}
                 <motion.span 
-                  className="text-emerald-600 inline-block" // Use inline-block for motion
+                  className="text-emerald-600 inline-block"
                   initial={{ x: -20, opacity: 0, filter: "blur(5px)" }}
                   animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
                   transition={{ delay: 0.7, type: "spring", damping: 12, stiffness: 100 }}
@@ -152,15 +158,14 @@ export default function HomePage() {
                 </motion.span>
               </h1>
 
-              {/* Hero Paragraph (Wrapped content in AnimatedText, kept P styling) */}
-              <p className="mx-auto max-w-3xl text-lg text-slate-600">
+              <p className="mx-auto max-w-3xl text-base text-slate-600 sm:text-lg">
                 <AnimatedText delay={0.5} speed={0.01}>
                   We provide AI-powered financial, consulting and business transformation
                   services to help small and medium enterprises scale
                 </AnimatedText>
               </p>
 
-              {/* Button (Now visible again) */}
+              {/* Button */}
               <button data-slot="button" className="mt-8 cursor-pointer select-none inline-flex items-center duration-200 justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-purple-950 text-primary-foreground hover:bg-purple-900 button-highlighted-shadow h-8 px-4 py-2 has-[&>svg]:px-2.5">
                 <span><Link href="/contact">Reach out to us</Link></span>
                 <svg height="18" width="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" className="-rotate-45">
@@ -173,21 +178,18 @@ export default function HomePage() {
             </section>
             </div>
 
-            {/* Features Section */}
             <section className={`border-b border-dashed border-gray-300 bg-white ${roboto.className}`}>
-              {/* "Our Services" Header */}
-              <div className="px-6 pt-12 pb-12">
+              <div className="px-4 pt-10 pb-8 sm:px-6 sm:pt-12 sm:pb-12"> {/* Adjusted mobile padding */}
                 <div className="flex items-center text-center" ref={servicesRef}> 
                   <div className="flex-grow border-t border-dashed border-gray-300"></div>
                   
                   <motion.h2
-                    // Original styles applied here
-                    className=" text-slate-900 mx-4 flex-shrink-0 rounded-full border border-gray-300 px-6 py-2 text-xl font-semibold font-mono"
-                    // Animation is now applied only to the AnimatedText inside
+                    // Adjusted text size for mobile
+                    className=" text-slate-900 mx-4 flex-shrink-0 rounded-full border border-gray-300 px-4 py-1 text-base font-semibold font-mono sm:px-6 sm:py-2 sm:text-xl"
                   >
                     {isInView ? (
                         <AnimatedText delay={1} className="inline-block">
-                            Our AI-Enhanced Services Include
+                          Our AI-Enhanced Services Include
                         </AnimatedText>
                     ) : (
                         <span className="opacity-0">Our AI-Enhanced Services Include</span>
@@ -202,10 +204,10 @@ export default function HomePage() {
                 {features.map((feature) => (
                   <div
                     key={feature.title}
-                    className="service-item p-8 text-center"
+                    className="service-item p-6 sm:p-8 text-center" // Adjusted mobile padding
                   >
-                    <feature.icon className="mx-auto mb-2 h-8 w-8 text-purple-950" />
-                    <h4 className="mb-2 text-[16px] font-semibold">
+                    <feature.icon className="mx-auto mb-2 h-7 w-7 sm:h-8 sm:w-8 text-purple-950" /> {/* Slightly smaller icon on mobile */}
+                    <h4 className="mb-2 text-base font-semibold sm:text-[16px]"> {/* Adjusted title size */}
                       {feature.title}
                     </h4>
                     <p className="text-slate-600 text-sm">{feature.description}</p>
@@ -231,7 +233,7 @@ export default function HomePage() {
             </div>
             </section>
           
-            <section className="border-b border-dashed border-gray-300 bg-white">
+            <section className="border-b border-dashed border-gray-300 bg-white"> 
               <h1 className="font-mono font-bold text-slate-900 py-4 text-center">Frequently Asked Questions</h1>
               <Faqs />
             </section>
@@ -239,7 +241,7 @@ export default function HomePage() {
 
           {/* Footer */}
           <footer className="">
-            <div className="py-8 text-center text-sm text-slate-500">
+            <div className="py-6 text-center text-xs text-slate-500 sm:py-8 sm:text-sm"> 
               © {new Date().getFullYear()} R Balajee & Co. All rights reserved.
             </div>
           </footer>
