@@ -43,9 +43,9 @@ export function ContactUsPage() {
     setSubmissionStatus({ message: "", success: false });
     
     // IMPORTANT: Replace these placeholder values with your actual EmailJS credentials.
-    const serviceId = "YOUR_SERVICE_ID"; 
-    const templateId = "YOUR_TEMPLATE_ID";
-    const publicKey = "YOUR_PUBLIC_KEY";
+    const serviceId = process.env.EMAILJS_SERVICE_ID;
+    const templateId = process.env.EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
 
     // 3. Updated templateParams to include the phone number
     const templateParams = {
