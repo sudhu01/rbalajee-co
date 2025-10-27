@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
 
+import emailjs from '@emailjs/browser';
+
 // 1. Updated the Zod schema to include the phone number
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -43,9 +45,10 @@ export function ContactUsPage() {
     setSubmissionStatus({ message: "", success: false });
     
     // IMPORTANT: Replace these placeholder values with your actual EmailJS credentials.
-    const serviceId = process.env.EMAILJS_SERVICE_ID;
-    const templateId = process.env.EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
 
     // 3. Updated templateParams to include the phone number
     const templateParams = {
@@ -57,7 +60,7 @@ export function ContactUsPage() {
     };
 
     try {
-        await window.emailjs.send(serviceId, templateId, templateParams, publicKey);
+        await emailjs.send(serviceId, templateId, templateParams, publicKey);
         setSubmissionStatus({ message: "Thank you! Your message has been sent successfully.", success: true });
         form.reset();
     } catch (error) {
