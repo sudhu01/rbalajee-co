@@ -143,7 +143,7 @@ export default function HomePage() {
             />
             <section className="relative z-10 border-b border-dashed border-gray-300 px-4 py-16 text-center sm:px-6 sm:py-24">
               
-              <h1 className="mb-4 text-3xl font-bold text-slate-900 sm:text-4xl md:text-5xl font-merriweather">
+              <h1 className="mb-4 text-2xl font-bold text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl font-merriweather px-2">
                 <AnimatedText delay={0} className="inline-block">
                   Your Trusted Partner in
                 </AnimatedText> 
@@ -158,7 +158,7 @@ export default function HomePage() {
                 </motion.span>
               </h1>
 
-              <p className="mx-auto max-w-3xl text-base text-slate-600 sm:text-lg">
+              <p className="mx-auto max-w-3xl text-sm text-slate-600 sm:text-base lg:text-lg px-2">
                 <AnimatedText delay={0.5} speed={0.01}>
                   We provide AI-powered financial, consulting and business transformation
                   services to help small and medium enterprises scale
@@ -181,11 +181,11 @@ export default function HomePage() {
             <section className={`border-b border-dashed border-gray-300 bg-white ${roboto.className}`}>
               <div className="px-4 pt-10 pb-8 sm:px-6 sm:pt-12 sm:pb-12"> {/* Adjusted mobile padding */}
                 <div className="flex items-center text-center" ref={servicesRef}> 
-                  <div className="flex-grow border-t border-dashed border-gray-300"></div>
+                  <div className="hidden sm:block flex-grow border-t border-dashed border-gray-300"></div>
                   
                   <motion.h2
                     // Adjusted text size for mobile
-                    className=" text-slate-900 mx-4 flex-shrink-0 rounded-full border border-gray-300 px-4 py-1 text-base font-semibold font-mono sm:px-6 sm:py-2 sm:text-xl"
+                    className="text-slate-900 mx-auto sm:mx-4 flex-shrink rounded-full border border-gray-300 px-3 py-1.5 text-[10px] leading-tight font-semibold font-mono sm:flex-shrink-0 sm:px-4 sm:py-1 sm:text-sm md:px-6 md:py-2 md:text-base lg:text-xl"
                   >
                     {isInView ? (
                         <AnimatedText delay={1} className="inline-block">
@@ -196,7 +196,7 @@ export default function HomePage() {
                     )}
                   </motion.h2>
 
-                  <div className="flex-grow border-t border-dashed border-gray-300"></div>
+                  <div className="hidden sm:block flex-grow border-t border-dashed border-gray-300"></div>
                 </div>
               </div>
 
