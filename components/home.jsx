@@ -158,7 +158,7 @@ export default function HomePage() {
                 </motion.span>
               </h1>
 
-              <p className="mx-auto max-w-3xl text-sm text-slate-600 sm:text-base lg:text-lg px-2">
+              <p className="mx-auto max-w-3xl text-sm text-slate-600 sm:text-base lg:text-[17px] px-2">
                 <AnimatedText delay={0.5} speed={0.01}>
                   We provide AI-powered financial, consulting and business transformation
                   services to help small and medium enterprises scale
