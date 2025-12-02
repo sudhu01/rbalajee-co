@@ -3,7 +3,7 @@ import Link from "next/link";
 import Navbar from "./navbar";
 import { Faqs } from "./faqs";
 import { motion, useInView } from "framer-motion"; 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import AnimatedText from "./ui/animatedtext";
 import StarAnimationText from "./ui/starAnimationText";
 import { Roboto } from "next/font/google";
@@ -68,7 +68,143 @@ export default function HomePage() {
   ];
 
   const servicesRef = useRef(null);
+  const footerRef = useRef(null);
   const isInView = useInView(servicesRef, { once: true, amount: 0.5 });
+
+  useEffect(() => {
+    // Inject LEI badge script directly into footer element
+    const scriptId = 'lei-badge-script';
+    
+    if (!footerRef.current) {
+      console.error('Footer ref not available');
+      return;
+    }
+
+    if (document.getElementById(scriptId)) {
+      console.log('LEI badge script already exists');
+      return;
+    }
+
+    console.log('Creating and injecting LEI badge script into footer...');
+    
+    // Create script element
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.type = 'text/javascript';
+    script.src = 'https://leiadmin.com/leibadge.js?color=dark&size=small&place=sticky&lei=98450054BBXFZE2EC750';
+    
+    script.addEventListener('load', () => {
+      console.log('✓ LEI badge script loaded successfully');
+      
+      // Check if badge container is created after script loads
+      const checkBadge = () => {
+        // Find badge container with shadowRoot
+        const allDivs = Array.from(document.querySelectorAll('div'));
+        let badgeContainer = null;
+        let badgeShadowRoot = null;
+        
+        for (const div of allDivs) {
+          if (div.shadowRoot) {
+            const badgeInside = div.shadowRoot.querySelector('.leibadge');
+            if (badgeInside) {
+              badgeContainer = div;
+              badgeShadowRoot = div.shadowRoot;
+              break;
+            }
+          }
+        }
+        
+        if (!badgeContainer) {
+          console.warn('⚠ Badge container not found - script may have failed to initialize');
+          console.log('This is likely because document.currentScript is null when script executes');
+          console.log('Attempting to manually trigger badge initialization...');
+          
+          // Try to manually call leibadge function if available
+          if (typeof window.leibadge === 'function') {
+            console.log('Calling leibadge() function manually...');
+            try {
+              window.leibadge();
+              // Check again after manual call
+              setTimeout(checkBadge, 500);
+            } catch (e) {
+              console.error('Error calling leibadge():', e);
+            }
+          } else {
+            console.log('leibadge function not available on window');
+            console.log('The script may need document.currentScript to work properly');
+            console.log('Checking if script functions are available...');
+            
+            // Check if script has loaded its functions
+            console.log('Available window properties:', Object.keys(window).filter(k => k.includes('lei') || k.includes('badge')));
+            
+            // If DOMContentLoaded already fired, the script might not have initialized
+            if (document.readyState === 'complete') {
+              console.log('DOM already loaded - script initialization might have missed DOMContentLoaded event');
+              console.log('The badge script waits for DOMContentLoaded, but it may have already fired');
+            }
+          }
+          return;
+        }
+        
+        console.log('✓ Badge container found!', badgeContainer);
+        
+        // Check and populate LEI code if missing
+        setTimeout(() => {
+          const leiCodeElement = badgeShadowRoot.querySelector('.leibadge-code');
+          const currentLeiCode = leiCodeElement?.innerText || leiCodeElement?.textContent;
+          
+          if (!currentLeiCode || currentLeiCode.trim() === '') {
+            console.log('LEI code not populated, manually setting it...');
+            if (leiCodeElement) {
+              const leiCode = '98450054BBXFZE2EC750';
+              leiCodeElement.textContent = leiCode;
+              leiCodeElement.href = `https://www.legalentityidentifier.co.uk/leicert/?lei=${leiCode}`;
+              console.log('✓ LEI code manually populated:', leiCode);
+            }
+          } else {
+            console.log('✓ LEI code already populated:', currentLeiCode);
+          }
+        }, 1000);
+      };
+      
+      // Check immediately and after delays
+      setTimeout(checkBadge, 500);
+      setTimeout(checkBadge, 2000);
+      setTimeout(checkBadge, 5000);
+    });
+    
+    script.addEventListener('error', (e) => {
+      console.error('✗ Failed to load LEI badge script:', e);
+      // Fallback: try loading from body if footer doesn't work
+      const fallbackScript = document.createElement('script');
+      fallbackScript.id = scriptId + '-fallback';
+      fallbackScript.src = script.src;
+      document.body.appendChild(fallbackScript);
+    });
+    
+    // Append to document.body to ensure proper execution
+    // Scripts need to be in head or body to execute properly
+    // The badge will appear sticky on the page regardless
+    document.body.appendChild(script);
+    console.log('Script element appended to body for execution');
+    
+    // Add a comment marker in footer to show association
+    if (footerRef.current) {
+      const comment = document.createComment(' LEI Badge Script loaded by footer component ');
+      footerRef.current.appendChild(comment);
+    }
+
+    return () => {
+      const script = document.getElementById(scriptId);
+      if (script?.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+      const fallback = document.getElementById(scriptId + '-fallback');
+      if (fallback?.parentNode) {
+        fallback.parentNode.removeChild(fallback);
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-purple-950">
@@ -240,10 +376,11 @@ export default function HomePage() {
           </main>
 
           {/* Footer */}
-          <footer className="">
+          <footer className="" ref={footerRef}>
             <div className="py-6 text-center text-xs text-slate-500 sm:py-8 sm:text-sm"> 
               © {new Date().getFullYear()} R Balajee & Co. All rights reserved.
             </div>
+            {/* LEI Badge Script - injected directly into footer via useEffect */}
           </footer>
         </div>
       </div>
