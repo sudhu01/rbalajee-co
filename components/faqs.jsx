@@ -5,13 +5,19 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 
-import { merriweather } from "@/app/layout"
+import { Merriweather } from "next/font/google";
 import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
   weight: ["400", "700"],
   subsets: ["latin"],
   variable: "--font-poppins",
+});
+
+const merriweather = Merriweather({
+  variable: "--font-merriweather",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export function Faqs() {
